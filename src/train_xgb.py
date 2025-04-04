@@ -38,7 +38,6 @@ def train(exp_name):
     # xgb.callback.EarlyStopping은 지정한 round 동안 성능 향상이 없으면 학습 조기 종료
     callbacks = [
         xgb.callback.EarlyStopping(rounds=earlystopping_round),
-        MlflowLoggingCallbackXGB(dtest, y_test, f1_score)
     ]
     
     model = xgb.train(
