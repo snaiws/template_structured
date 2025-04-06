@@ -1,6 +1,8 @@
 import torch
 
-class PytorchAdapter(BaseModel):
+from .base import BaseAdaptor
+
+class PytorchAdapter(BaseAdaptor):
     def __init__(self, model, criterion, optimizer, device='cpu'):
         """
         model: nn.Module 기반 PyTorch 모델
@@ -13,7 +15,7 @@ class PytorchAdapter(BaseModel):
         self.criterion = criterion
         self.optimizer = optimizer
 
-    def fit(self, train_loader, epochs=10, **kwargs):
+    def train(self, train_loader, epochs=10, **kwargs):
         self.model.train()
         for epoch in range(epochs):
             for batch in train_loader:
@@ -35,15 +37,3 @@ class PytorchAdapter(BaseModel):
             X = X.to(self.device)
             outputs = self.model(X)
         return outputs.cpu()
-
-    def evaluate(self, test_loader, **kwargs):
-        self.model.eval()
-        total_loss = 0.0
-        with torch.no_grad():
-            for batch in test_loader:
-                X, y = batch
-                X, y = X.to(self.device), y.to(self.device)
-                outputs = self.model(X)
-                loss = self.criterion(outputs, y)
-                total_loss += loss.item()
-        return total_loss

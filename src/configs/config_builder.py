@@ -7,6 +7,7 @@ from .env import EnvDefineUnit
 class ConfigDefineTool:
     def __init__(self, exp_name="Experiment_0"):
         self.exp_name = exp_name
+        print(f"config : {exp_name}")
 
     def get_env(self):
         self.env = EnvDefineUnit()
@@ -16,6 +17,7 @@ class ConfigDefineTool:
         module = importlib.import_module(".experiments", package=__package__)
         exp_class = getattr(module, self.exp_name)
         self.exp = exp_class()
+        print(self.exp)
         return self.exp
 
 

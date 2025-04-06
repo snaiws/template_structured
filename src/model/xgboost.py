@@ -1,19 +1,25 @@
-# XGBoost 어댑터 예시
-import xgboost as xgb
+from .base import BaseAdaptor
 
-class XGBoostAdapter(BaseModel):
-    def __init__(self, model):
+
+
+class XGBoostAdapter(BaseAdaptor):
+    def __init__(self, model, model_params):
         """
         model: xgboost.XGBClassifier 또는 xgboost.XGBRegressor
         """
         self.model = model
+        self.model_params = model_params
 
-    def fit(self, X, y, eval_set=None, **kwargs):
-        self.model.fit(X, y, eval_set=eval_set, **kwargs)
+    def train(self, data, training_params):
+        self.model = self.model.train(
+            self.model_params,
+            data,
+            **training_params
+            )
         return self
 
-    def predict(self, X):
-        return self.model.predict(X)
-
-    def evaluate(self, X, y, **kwargs):
-        return self.model.score(X, y, **kwargs)
+    def predict(self, data):
+        if hasattr(self.model, "best_ntree_limit"):
+            return self.model.predict(data, ntree_limit=self.model.best_ntree_limit)
+        else:
+            return self.model.predict(data)

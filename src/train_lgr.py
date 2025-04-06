@@ -12,7 +12,7 @@ def train(exp_name):
     # configs
     config = ConfigDefineTool(exp_name = exp_name)
     env = config.get_env()
-    exp = config.get_exp(exp_name)
+    exp = config.get_exp()
 
     path_train = os.path.join(env.PATH_DATA_DIR, exp.train)
 
@@ -45,3 +45,7 @@ def train(exp_name):
     
     # MLflow에 모델 저장 (scikit-learn 모델 저장)
     print("Model saved to MLflow")
+
+
+if __name__ == "__main__":
+    train("ExperimentLgrBase")

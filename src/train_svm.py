@@ -12,7 +12,7 @@ def train(exp_name):
     # configs
     config = ConfigDefineTool(exp_name = exp_name)
     env = config.get_env()
-    exp = config.get_exp(exp_name)
+    exp = config.get_exp()
 
     path_train = os.path.join(env.PATH_DATA_DIR, exp.train)
 
@@ -23,13 +23,15 @@ def train(exp_name):
 
     # 데이터 로딩
     X_train, y_train, X_val, y_val, X_test, y_test = load_data(path_train)
-
+    print(X_train.to_numpy(), y_train.to_numpy())
+    print('data loaded')
 
     # SVM 모델 생성 (필요시 커널, C 등 하이퍼파라미터 조정)
     svm_model = SVC(**training_params)
 
+    print('model set')
     # 모델 학습
-    svm_model.fit(X_train, y_train)
+    svm_model.fit(X_train.to_numpy(), y_train.to_numpy())
     
     # 검증 데이터에 대한 예측 및 평가
     val_preds = svm_model.predict(X_val)
@@ -45,3 +47,7 @@ def train(exp_name):
     
     # MLflow에 모델 저장 (scikit-learn 모델 저장)
     # print("Model saved to MLflow")
+
+
+if __name__ == "__main__":
+    train("ExperimentSvmBase")

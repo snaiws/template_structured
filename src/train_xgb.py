@@ -5,14 +5,14 @@ import xgboost as xgb
 
 from configs import ConfigDefineTool
 from data.data_loader import load_data
-
+from model import XGBoostAdapter
 
 
 def train(exp_name):
     # configs
     config = ConfigDefineTool(exp_name = exp_name)
     env = config.get_env()
-    exp = config.get_exp(exp_name)
+    exp = config.get_exp()
 
     path_train = os.path.join(env.PATH_DATA_DIR, exp.train)
 
@@ -39,20 +39,23 @@ def train(exp_name):
     callbacks = [
         xgb.callback.EarlyStopping(rounds=earlystopping_round),
     ]
+    training_params = {
+        "num_boost_round" : num_boost_round,
+        "evals" : evals,
+        "callbacks":callbacks
+    }
+    model = XGBoostAdapter(xgb, model_params)
     
-    model = xgb.train(
-        model_params,
-        dtrain,
-        num_boost_round=num_boost_round,
-        evals=evals,
-        callbacks=callbacks,
+    model.train(
+        data = dtrain,
+        training_params=training_params
     )
     
+    
     # 테스트 데이터에 대해 예측 및 평가
-    if hasattr(model, "best_ntree_limit"):
-        y_pred = model.predict(dtest, ntree_limit=model.best_ntree_limit)
-    else:
-        y_pred = model.predict(dtest)
+    y_pred = model.predict(dtest)
+
+
     y_pred_binary = (y_pred > 0.5).astype(int)
     f1 = f1_score(y_test, y_pred_binary)
     print("f1:", f1)
@@ -61,3 +64,7 @@ def train(exp_name):
     
     # MLflow에 모델 저장
     print("Model saved to MLflow")
+
+
+if __name__ == "__main__":
+    train("ExperimentXgbBase")

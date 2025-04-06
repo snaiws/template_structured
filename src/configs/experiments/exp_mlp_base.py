@@ -16,7 +16,7 @@ class ExperimentMlpBase(Experiment):
     model_name : str = "mlp_base"
     model_params : dict = field(default_factory=lambda: 
         {
-            "hidden_dim" : [64,64]
+            "hidden_dims" : [64,64]
         }
     )
 

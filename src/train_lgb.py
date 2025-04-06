@@ -10,16 +10,15 @@ def train(exp_name):
     # configs
     config = ConfigDefineTool(exp_name = exp_name)
     env = config.get_env()
-    exp = config.get_exp(exp_name)
+    exp = config.get_exp()
 
     path_train = os.path.join(env.PATH_DATA_DIR, exp.train)
 
 
     model_params = exp.model_params
     training_params = exp.training_params
-
-    stopping_rounds = training_params['stopping_rounds']
-    period = training_params['period']
+    stopping_rounds = training_params['earlystopping_round']
+    period = training_params['log_eval_period']
     num_boost_round = training_params['num_boost_round']
 
 
@@ -57,3 +56,7 @@ def train(exp_name):
 
     # 모델 저장
     print("Model saved to MLflow")
+
+
+if __name__ == "__main__":
+    train("ExperimentLgbBase")

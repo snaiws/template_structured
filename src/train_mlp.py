@@ -33,7 +33,7 @@ def train(exp_name):
     # configs
     config = ConfigDefineTool(exp_name = exp_name)
     env = config.get_env()
-    exp = config.get_exp(exp_name)
+    exp = config.get_exp()
 
     path_train = os.path.join(env.PATH_DATA_DIR, exp.train)
 
@@ -41,7 +41,7 @@ def train(exp_name):
     model_params = exp.model_params
     training_params = exp.training_params
 
-    hidden_dim = model_params['hidden_dim']
+    hidden_dims = model_params['hidden_dims']
 
     batch_size = training_params['batch_size']
     lr_optimizer = training_params['lr_optimizer']
@@ -63,7 +63,7 @@ def train(exp_name):
 
 
     input_dim = X_train.shape[1]
-    model = MLP(input_dim, hidden_dim=hidden_dim)
+    model = MLP(input_dim, hidden_dims=hidden_dims)
 
     # 손실함수 및 옵티마이저 정의
     criterion = nn.BCEWithLogitsLoss()  # 출력이 로짓이므로 사용
@@ -139,3 +139,7 @@ def train(exp_name):
         
         # 최종 모델 MLflow에 저장
         print("Model saved to MLflow")  
+
+
+if __name__ == "__main__":
+    train("ExperimentMlpBase")

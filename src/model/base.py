@@ -1,17 +1,17 @@
 from abc import ABC, abstractmethod
 
-class BaseModel(ABC):
+class BaseAdaptor(ABC):
     @abstractmethod
-    def fit(self, X, y, **kwargs):
+    def __init__(self, model, model_params):
+        """모델 선언"""
+        pass
+        
+    @abstractmethod
+    def train(self, data, **training_params):
         """모델 학습"""
         pass
 
     @abstractmethod
-    def predict(self, X):
+    def predict(self, data):
         """예측 실행"""
-        pass
-
-    @abstractmethod
-    def evaluate(self, X, y, **kwargs):
-        """모델 평가"""
         pass
