@@ -39,7 +39,7 @@ def train(exp_name):
     callbacks = [
         xgb.callback.EarlyStopping(rounds=earlystopping_round),
     ]
-    training_params = {
+    training_params_ = {
         "num_boost_round" : num_boost_round,
         "evals" : evals,
         "callbacks":callbacks
@@ -48,7 +48,7 @@ def train(exp_name):
     
     model.train(
         data = dtrain,
-        training_params=training_params
+        training_params=training_params_
     )
     
     
