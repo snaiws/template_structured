@@ -5,7 +5,7 @@ import xgboost as xgb
 
 from configs import ConfigDefineTool
 from data.data_loader import load_data
-from model import XGBoostAdapter
+from machine import ModelXGB
 
 
 def train(exp_name):
@@ -16,11 +16,8 @@ def train(exp_name):
 
     path_train = os.path.join(env.PATH_DATA_DIR, exp.train)
 
+    model_name = exp.model_name
     model_params = exp.model_params
-    training_params = exp.training_params
-
-    num_boost_round = training_params['num_boost_round']
-    earlystopping_round = training_params['earlystopping_round']
 
 
     # 데이터 로딩
@@ -31,26 +28,12 @@ def train(exp_name):
     dval   = xgb.DMatrix(X_val, label=y_val, enable_categorical=True)
     dtest  = xgb.DMatrix(X_test, label=y_test, enable_categorical=True)
 
-    # XGBoost 파라미터 설정
-
-
-    evals = [(dtrain, "train"), (dval, "valid")]
-    # xgb.callback.EarlyStopping은 지정한 round 동안 성능 향상이 없으면 학습 조기 종료
-    callbacks = [
-        xgb.callback.EarlyStopping(rounds=earlystopping_round),
-    ]
-    training_params_ = {
-        "num_boost_round" : num_boost_round,
-        "evals" : evals,
-        "callbacks":callbacks
-    }
-    model = XGBoostAdapter(xgb, model_params)
-    
+    # 모델 학습
+    model = ModelXGB(model_name = model_name, model_params = model_params)
     model.train(
-        data = dtrain,
-        training_params=training_params_
+        data_train = dtrain, 
+        data_valid = dval
     )
-    
     
     # 테스트 데이터에 대해 예측 및 평가
     y_pred = model.predict(dtest)
@@ -60,10 +43,6 @@ def train(exp_name):
     f1 = f1_score(y_test, y_pred_binary)
     print("f1:", f1)
     
-    # 파라미터 및 최종 메트릭 기록
-    
-    # MLflow에 모델 저장
-    print("Model saved to MLflow")
 
 
 if __name__ == "__main__":

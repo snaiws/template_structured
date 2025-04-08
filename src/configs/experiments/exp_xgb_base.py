@@ -20,13 +20,7 @@ class ExperimentXgbBase(Experiment):
             "eval_metric": "logloss",
             "eta": 0.05,                     # 학습률
             "max_depth": 6,
-            "subsample": 0.9
-        }
-    )
-
-    # train 파라미터터
-    training_params : dict = field(default_factory=lambda: 
-        {
+            "subsample": 0.9,
             "num_boost_round":1000,
             "earlystopping_round":50
         }
