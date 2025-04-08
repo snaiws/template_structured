@@ -18,13 +18,6 @@ class ExperimentLgrBase(Experiment):
     model_name : str = "lgr_base"
     model_params : dict = field(default_factory=lambda: 
         {
-
-        }
-    )
-    
-    
-    training_params : dict = field(default_factory=lambda: 
-        {
             "penalty" : 'l2',
             "C" : 1.0,
             "solver" : "lbfgs",
