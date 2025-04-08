@@ -1,8 +1,8 @@
-from .base import BaseAdaptor
+from .base import ModelAdaptor
 
 
 
-class XGBoostAdapter(BaseAdaptor):
+class XGBoostAdapter(ModelAdaptor):
     def __init__(self, model, model_params):
         """
         model: xgboost.XGBClassifier 또는 xgboost.XGBRegressor

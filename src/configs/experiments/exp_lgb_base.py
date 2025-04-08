@@ -15,20 +15,15 @@ class ExperimentLgbBase(Experiment):
     # model 파라미터
     model_name : str = "lgb_base"
     model_params : dict = field(default_factory=lambda: 
-        {
+        {   
             'objective': 'binary',
             'metric': 'binary_logloss',
             'boosting_type': 'gbdt',
             'num_leaves': 31,
             'learning_rate': 0.05,
             'feature_fraction': 0.9,
-        }
-    )
-
-    training_params : dict = field(default_factory=lambda: 
-        {
-            "earlystopping_round" : 50,
-            "log_eval_period" : 100,
+            "stopping_rounds" : 50,
+            "period" : 100,
             "num_boost_round" : 1000
         }
     )
