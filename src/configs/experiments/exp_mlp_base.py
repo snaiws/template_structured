@@ -16,12 +16,8 @@ class ExperimentMlpBase(Experiment):
     model_name : str = "mlp_base"
     model_params : dict = field(default_factory=lambda: 
         {
-            "hidden_dims" : [64,64]
-        }
-    )
-
-    training_params : dict = field(default_factory=lambda: 
-        {
+            "input_dim" : 43,
+            "hidden_dims" : [64,64],
             "batch_size" : 32,
             "num_epochs" : 20,
             "lr_optimizer" : 0.001
