@@ -18,13 +18,6 @@ class ExperimentSvmBase(Experiment):
     model_name : str = "lgr_base"
     model_params : dict = field(default_factory=lambda: 
         {
-
-        }
-    )
-    
-    
-    training_params : dict = field(default_factory=lambda: 
-        {
             "kernel":'rbf', 
             "C":1.0, 
             "gamma":'scale', 

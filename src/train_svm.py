@@ -1,10 +1,11 @@
 import os
 
 from sklearn.metrics import f1_score
-from sklearn.svm import SVC
 
 from configs import ConfigDefineTool
 from data.data_loader import load_data
+from data.set import DatasetSVM
+from machine import ModelSVM
 
 
 
@@ -17,29 +18,30 @@ def train(exp_name):
     path_train = os.path.join(env.PATH_DATA_DIR, exp.train)
 
 
+    model_name = exp.model_name
     model_params = exp.model_params
-    training_params = exp.training_params
 
 
     # 데이터 로딩
     X_train, y_train, X_val, y_val, X_test, y_test = load_data(path_train)
-    print(X_train.to_numpy(), y_train.to_numpy())
     print('data loaded')
 
-    # SVM 모델 생성 (필요시 커널, C 등 하이퍼파라미터 조정)
-    svm_model = SVC(**training_params)
+    data_train = DatasetSVM(X_train, y_train)
 
-    print('model set')
     # 모델 학습
-    svm_model.fit(X_train.to_numpy(), y_train.to_numpy())
+    model = ModelSVM(model_name = model_name, model_params = model_params)
+    model.train(
+        data_train = data_train
+    )
+    
     
     # 검증 데이터에 대한 예측 및 평가
-    val_preds = svm_model.predict(X_val)
+    val_preds = model.predict(X_val)
     val_f1 = f1_score(y_val, val_preds)
     print(f"Validation F1: {val_f1:.4f}")
     
     # 테스트 데이터에 대한 예측 및 평가
-    test_preds = svm_model.predict(X_test)
+    test_preds = model.predict(X_test)
     test_f1 = f1_score(y_test, test_preds)
     print(f"Test F1: {test_f1:.4f}")
     
