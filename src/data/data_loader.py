@@ -7,7 +7,7 @@ from .source import DataSourceCSV
 
 def load_data(data_path: str):
     """CSV 파일로부터 train, test 데이터를 로딩하고, 카테고리형 컬럼을 처리합니다."""
-    df = DataSourceCSV(data_path).get_data()
+    df = DataSourceCSV(data_path).read()
     df.set_index('UID', inplace=True)
     categorical_cols = ['주거 형태', '현재 직장 근속 연수', '대출 목적', '대출 상환 기간']
     df = pd.get_dummies(df, columns=categorical_cols)

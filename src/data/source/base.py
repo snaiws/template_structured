@@ -20,21 +20,8 @@ class DataSource(ABC):
         
 
     @abstractmethod
-    def _load_data(self):
+    def read(self):
         """구체적인 데이터 로딩 로직 (상속 클래스에서 구현)"""
         pass
 
 
-    @property
-    def data(self):
-        """데이터에 대한 지연 로딩 구현"""
-        if self._data is None:
-            self._data = self._load_data()
-        return self._data
-    
-    
-    def get_data(self):
-        """데이터 접근 메서드"""
-        return self.data
-    
-    

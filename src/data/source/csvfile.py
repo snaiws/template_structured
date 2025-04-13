@@ -22,12 +22,5 @@ class DataSourceCSV(DataSourceFile):
         self.read_csv_kwargs = read_csv_kwargs
         
 
-    def _load_from_file(self) -> pd.DataFrame:
+    def read(self) -> pd.DataFrame:
         return pd.read_csv(self.csv_path, **self.read_csv_kwargs)
-
-
-
-if __name__ == "__main__":
-    path = "/workspace/Storage/template_structured/Data/raw/train.csv"
-    data = DataSourceCSV(path)
-    print(data.get_data())
