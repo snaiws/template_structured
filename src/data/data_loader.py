@@ -3,9 +3,11 @@ import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
 
+from .source import DataSourceCSV
+
 def load_data(data_path: str):
     """CSV 파일로부터 train, test 데이터를 로딩하고, 카테고리형 컬럼을 처리합니다."""
-    df = pd.read_csv(data_path)
+    df = DataSourceCSV(data_path).get_data()
     df.set_index('UID', inplace=True)
     categorical_cols = ['주거 형태', '현재 직장 근속 연수', '대출 목적', '대출 상환 기간']
     df = pd.get_dummies(df, columns=categorical_cols)
