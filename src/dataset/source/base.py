@@ -10,17 +10,8 @@ class DataSource(ABC):
     또한 파일시스템에서 lock 기능이 필요할 지도 모른다.
     이전에 정리했던 db와 s3에 대한 객체를 불러오자.
     """
-    def __init__(self):
-        """
-        이전 노드로부터 하달받는 방식
-        Args:
-            parent_node: 이전 처리 단계의 DataSource 인스턴스 (선택적)
-        """
-        self._data = None
-        
-
     @abstractmethod
-    def read(self):
+    async def get_data(self):
         """구체적인 데이터 로딩 로직 (상속 클래스에서 구현)"""
         pass
 

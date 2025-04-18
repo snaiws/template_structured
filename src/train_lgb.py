@@ -1,13 +1,13 @@
 import os
+import asyncio
+
 from sklearn.metrics import f1_score
 
-import lightgbm as lgb
-
 from configs import ConfigDefineTool
-from data.data_loader import load_data
+from dataset.dataset_loaninfo import DatasetLoaninfoRaw
 from machine import ModelLGB
 
-def train(exp_name):
+async def train(exp_name):
     # configs
     config = ConfigDefineTool(exp_name = exp_name)
     env = config.get_env()
@@ -18,18 +18,18 @@ def train(exp_name):
     model_name = exp.model_name
     model_params = exp.model_params
 
+    data_params = {
+        "csv_path": path_train,
+        "ratio": (0.6,0.2,0.2),
+        "random_state":42
+    }
 
     # 데이터 로딩
-    X_train, y_train, X_val, y_val, X_test, y_test = load_data(path_train)
-    train_data = lgb.Dataset(X_train, label=y_train)
-    valid_data = lgb.Dataset(X_val, label=y_val, reference=train_data)
+    X_train, y_train, X_val, y_val, X_test, y_test = await DatasetLoaninfoRaw(data_params).data
 
     # 모델 학습
     model = ModelLGB(model_name = model_name, model_params = model_params)
-    model.train(
-        data_train = train_data, 
-        data_valid = valid_data
-    )
+    model.train(X_train, y_train, X_val, y_val)
     y_pred = model.predict(X_test)
 
     # 후처리
@@ -42,4 +42,4 @@ def train(exp_name):
 
 
 if __name__ == "__main__":
-    train("ExperimentLgbBase")
+    asyncio.run(train("ExperimentLgbBase"))

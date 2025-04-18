@@ -17,10 +17,9 @@ class DataSourceCSV(DataSourceFile):
         csv_path: 데이터 파일 경로
         read_csv_kwargs: pandas read_csv 옵션들
         """
-        super().__init__(file_path = csv_path)
         self.csv_path = csv_path
         self.read_csv_kwargs = read_csv_kwargs
         
 
-    def read(self) -> pd.DataFrame:
+    async def get_data(self) -> pd.DataFrame:
         return pd.read_csv(self.csv_path, **self.read_csv_kwargs)

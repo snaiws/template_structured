@@ -37,7 +37,9 @@ class ModelLGB(ModelAdaptor):
             self.callbacks.append(lgb.log_evaluation(period=self.period))
         
             
-    def train(self, data_train, data_valid, **kwargs):
+    def train(self, X_train, y_train, X_val, y_val, **kwargs):
+        data_train = lgb.Dataset(X_train, label=y_train)
+        data_valid = lgb.Dataset(X_val, label=y_val, reference=data_train)
         self.model = lgb.train(
             params = self.params,
             train_set = data_train,

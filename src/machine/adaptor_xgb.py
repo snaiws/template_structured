@@ -31,7 +31,10 @@ class ModelXGB(ModelAdaptor):
             "subsample": self.subsample,
         }
         
-    def train(self, data_train, data_valid):
+
+    def train(self, X_train, y_train, X_val, y_val):
+        data_train = xgb.DMatrix(X_train, label=y_train, enable_categorical=True)
+        data_valid   = xgb.DMatrix(X_val, label=y_val, enable_categorical=True)
         """모델 학습"""
         evals = [(data_train, "train"), (data_valid, "valid")]
         self.model = xgb.train(
@@ -44,6 +47,7 @@ class ModelXGB(ModelAdaptor):
         
     def predict(self, data):
         """예측 실행"""
+        data = xgb.DMatrix(data, enable_categorical=True)
         if hasattr(self.model, "best_ntree_limit"):
             return self.model.predict(data, ntree_limit=self.model.best_ntree_limit)
         else:
