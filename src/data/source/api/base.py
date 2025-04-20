@@ -6,18 +6,18 @@ from typing import Dict, Any, Optional, ClassVar
 from .exception import APIRequestError, APIServerError, APITimeoutError, APIRateLimitExceeded
 
 
-class BaseAPIClient(ABC):
+class BaseAPIManager(ABC):
     """
-    base_url별 싱글턴 템플릿 메소드 어댑터
+    base_url별 키 기반 싱글턴 템플릿 메소드 어댑터
     기본적으로 분당 최대 1000회 요청 제한이 있음
     """
-    _instances: ClassVar[Dict[str, 'BaseAPIClient']] = {}
+    _instances: ClassVar[Dict[str, 'BaseAPIManager']] = {}
     _lock = asyncio.Lock()
     
     def __new__(cls, base_url, *args, **kwargs):
         # base_url을 키로 사용하여 인스턴스 관리
         if base_url not in cls._instances:
-            cls._instances[base_url] = super(BaseAPIClient, cls).__new__(cls)
+            cls._instances[base_url] = super(BaseAPIManager, cls).__new__(cls)
         return cls._instances[base_url]
     
     def __init__(self, base_url, logger, timeout: float = 10.0, 

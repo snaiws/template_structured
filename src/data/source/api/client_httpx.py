@@ -2,13 +2,13 @@ from typing import Dict, Any, Optional
 
 import httpx
 
-from .base import BaseAPIClient
+from .base import BaseAPIManager
 
 
 
-class HttpxAPIClient(BaseAPIClient):
+class HttpxAPIManager(BaseAPIManager):
     """
-    DART 서버에 대한 비동기 HTTP API 클라이언트
+    비동기 HTTP API 매니저
     """
     def __init__(self, base_url, logger, timeout: float = 10.0, 
                  rate_limit: int = 1000, rate_period: int = 60):
