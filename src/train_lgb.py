@@ -4,7 +4,7 @@ import asyncio
 from sklearn.metrics import f1_score
 
 from configs import ConfigDefineTool
-from dataset.dataset_loaninfo import DatasetLoaninfoRaw
+from data.dataset_loaninfo import DatasetLoaninfoRaw
 from machine import ModelLGB
 
 async def train(exp_name):
