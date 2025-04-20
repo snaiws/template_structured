@@ -17,15 +17,16 @@ class HttpxAPIManager(BaseAPIManager):
         # HTTP 클라이언트 생성
         self._initialized = True
 
-    async def open_client(self):
-        self.client = httpx.AsyncClient(
-            base_url=self.base_url,
-            timeout=self.timeout
-        )
+    async def connect(self):
+        if not hasattr(self, 'client') or self.client.is_closed:
+            self.client = httpx.AsyncClient(
+                base_url=self.base_url,
+                timeout=self.timeout
+            )
     
     async def close(self):
         """클라이언트 세션 종료"""
-        if hasattr(self, 'client'):
+        if hasattr(self, 'client') and not self.client.is_closed:
             await self.client.aclose()
 
 
@@ -55,7 +56,7 @@ class HttpxAPIManager(BaseAPIManager):
         """GET 요청 수행"""
         await self._check_rate_limit()
 
-        await self.open_client()
+        await self.connect()
         async with self.client as api:
             response = await api.get(endpoint, params=params, headers=headers)
         return self._handle_response(response)
@@ -67,7 +68,7 @@ class HttpxAPIManager(BaseAPIManager):
         """POST 요청 수행"""
         await self._check_rate_limit()
 
-        await self.open_client()
+        await self.connect()
         async with self.client as api:
             response = await api.post(endpoint, data=data, json=json_data, headers=headers)
         return self._handle_response(response)
@@ -79,7 +80,7 @@ class HttpxAPIManager(BaseAPIManager):
         """PUT 요청 수행"""
         await self._check_rate_limit()
 
-        await self.open_client()
+        await self.connect()
         async with self.client as api:
             response = await api.put(endpoint, data=data, json=json_data, headers=headers)
         return self._handle_response(response)
@@ -90,7 +91,7 @@ class HttpxAPIManager(BaseAPIManager):
         """DELETE 요청 수행"""
         await self._check_rate_limit()
 
-        await self.open_client()
+        await self.connect()
         async with self.client as api:
             response = await api.delete(endpoint, params=params, headers=headers)
         return self._handle_response(response)
@@ -102,7 +103,7 @@ class HttpxAPIManager(BaseAPIManager):
         """PATCH 요청 수행"""
         await self._check_rate_limit()
 
-        await self.open_client()
+        await self.connect()
         async with self.client as api:
             response = await api.patch(endpoint, data=data, json=json_data, headers=headers)
         return self._handle_response(response)

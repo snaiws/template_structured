@@ -38,14 +38,17 @@ class BaseAPIManager(ABC):
         self._initialized = True
 
     @abstractmethod
-    async def open_client(self):
+    async def connect(self):
         '''
-        어댑터, 항상 여는게 아니라 사용할 때만 연결하도록 get 메소드 등에서 구현
+        어댑터, 비동기방식은 커넥션풀이 필요하다고 함
         '''
         pass
 
     @abstractmethod
     async def close(self):
+        '''
+        어댑터, 비동기방식은 커넥션풀이 필요하다고 함
+        '''
         pass
     
     async def _check_rate_limit(self):
