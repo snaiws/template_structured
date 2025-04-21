@@ -1,2 +1,2 @@
-from .common import CommonDataNode
+from .common import CommonNode
 from .pubsub import PubNode, SubNode

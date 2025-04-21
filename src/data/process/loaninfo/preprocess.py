@@ -2,7 +2,7 @@ import pandas as pd
 
 from sklearn.model_selection import train_test_split
 
-def cleaning_loaninfo_1(data):
+def idx_loaninfo_1(data):
     data.set_index('UID', inplace=True)
     return data
 
@@ -15,27 +15,19 @@ def typing_loaninfo_1(data):
     data = data.astype(float)
     return data
 
-def split_loaninfo_1(data, ratio:tuple, random_state:int):
-    target = "채무 불이행 여부"
+def sampaling_loaninfo_1(data, ratio:tuple, random_state:int):
     train_size, val_size, test_size = ratio
     assert train_size + val_size + test_size == 1, "데이터셋 분할 비율의 합이 1이 아닙니다."
 
     # train 데이터셋 분할 (train: 60%, validation: 20%, test: 20%) 이건 원래 따로 샘플링 버전 저장해야 함
     train, val = train_test_split(data, test_size=1-train_size, random_state=random_state)
     val, test = train_test_split(val, test_size=1-train_size-val_size, random_state=random_state)
+    return train, val, test
 
-    X_train, y_train = train.drop(columns=[target]), train[target]
-    X_val, y_val = val.drop(columns=[target]), val[target]
-    X_test, y_test = test.drop(columns=[target]), test[target]
-    result = {
-        "X_train":X_train,
-        "y_train":y_train,
-        "X_val":X_val,
-        "y_val":y_val,
-        "X_test":X_test,
-        "y_test":y_test,
-    }
-    return result
+def split_loaninfo_1(data):
+    target = "채무 불이행 여부"
+    X, y = data.drop(columns=[target]), data[target]
+    return X, y
 
 
 def get_max_values(df)-> dict:

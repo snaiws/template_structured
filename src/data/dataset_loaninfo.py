@@ -1,14 +1,14 @@
 import asyncio
 
 from .base import BaseDataset
-from .node import CommonDataNode, PubNode, SubNode
+from .node import CommonNode, PubNode, SubNode
 from .source import DataSourceCSV
-from .process.loaninfo.preprocess import *
+from .process import PreprocessPipeline, SamplingPipeline
 
 
 
 async def myhook(node):
-    print(node.node_name)
+    print(node.element)
 
 
 class DatasetLoaninfoRaw(BaseDataset):
@@ -20,38 +20,26 @@ class DatasetLoaninfoRaw(BaseDataset):
         """인덱스로 데이터 항목 접근"""
         pass
 
-    async def pipeline(self, csv_path, ratio, random_state):
-        node_0 = DataSourceCSV(csv_path)
-        node_1 = CommonDataNode(node_0, node_name='node_1', process=cleaning_loaninfo_1)
-        node_1.add_post_hook(myhook)
-        node_2 = CommonDataNode(node_1, node_name='node_2', process=encoding_loaninfo_1)
-        node_2.add_post_hook(myhook)
-        node_3 = CommonDataNode(node_2, node_name='node_3', process=typing_loaninfo_1)
-        node_3.add_post_hook(myhook)
-        node_4 = PubNode(node_3, node_name='node_4', process=split_loaninfo_1, process_kwargs={"ratio":ratio, "random_state":random_state})
-        node_4.add_post_hook(myhook)
-        node_5 = SubNode(node_4, node_name='node_5', key='X_train')
-        node_5.add_post_hook(myhook)
-        node_6 = SubNode(node_4, node_name='node_6', key='y_train')
-        node_6.add_post_hook(myhook)
-        node_7 = SubNode(node_4, node_name='node_7', key='X_val')
-        node_7.add_post_hook(myhook)
-        node_8 = SubNode(node_4, node_name='node_8', key='y_val')
-        node_8.add_post_hook(myhook)
-        node_9 = SubNode(node_4, node_name='node_9', key='X_test')
-        node_9.add_post_hook(myhook)
-        node_10 = SubNode(node_4, node_name='node_10', key='y_test')
-        node_10.add_post_hook(myhook)
-        node_11 = CommonDataNode(node_5, node_name='node_11', process=get_max_values)
-        node_11.add_post_hook(myhook)
-        node_12 = CommonDataNode(node_5, node_11, node_name='node_12', process=scaler_loaninfo_1)
-        node_12.add_post_hook(myhook)
-        node_13 = CommonDataNode(node_7, node_11, node_name='node_13', process=scaler_loaninfo_1)
-        node_13.add_post_hook(myhook)
-        node_14 = CommonDataNode(node_9, node_11, node_name='node_14', process=scaler_loaninfo_1)
-        node_14.add_post_hook(myhook)
+    async def get_data(self, csv_path, ratio, random_state):
+        params1 = {
+            "ratio":ratio,
+            "random_state":random_state
+        }
 
-        results = await asyncio.gather(node_12.get_data(), node_6.get_data(), node_13.get_data(), node_8.get_data(), node_14.get_data(), node_10.get_data())
+        pipeline1 = SamplingPipeline(params1)
+        pipeline2 = PreprocessPipeline()
+
+        node_0 = DataSourceCSV(csv_path)
+        node_1 = PubNode(node_0, element= ['train', 'validate', 'test'], process = pipeline1)
+        node_1.add_post_hook(myhook)
+        node_2, node_3, node_4 = node_1.publish()
+
+        
+        node_5 = PubNode(node_2, node_3, node_4, element=['X_train', 'y_train','X_val','y_val','X_test','y_test'], process=pipeline2)
+        node_5.add_post_hook(myhook)
+        node_6, node_7, node_8, node_9, node_10, node_11 = node_5.publish()
+
+        results = await asyncio.gather(node_6.get_data(), node_7.get_data(), node_8.get_data(), node_9.get_data(), node_10.get_data(), node_11.get_data())
         return results
 
 

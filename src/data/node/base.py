@@ -9,11 +9,10 @@ class BaseDataNode(ABC):
     """
     프록시 패턴을 통해 데이터를 제어, 로깅, 지연호출
     """
-    def __init__(self, *prior_nodes, node_name, process=None, process_kwargs={}):
-        self.node_name = node_name
+    def __init__(self, *prior_nodes, element, process=None):
+        self.element = element # id or path
         self.prior_nodes = prior_nodes # 지연호출
         self.process = process
-        self.process_kwargs = process_kwargs
         self._cache:dict = None
         self._cache_lock = asyncio.Lock()  # 락 추가
         self.pre_hooks = []   # 데이터 처리 전 실행할 훅(로깅, api훅 등)
@@ -38,8 +37,12 @@ class BaseDataNode(ABC):
                 asyncio.create_task(hook(self))
             return result
     
+
     @abstractmethod
     async def _get_data(self):
+        '''
+        실제 데이터 호출
+        '''
         pass
     
     

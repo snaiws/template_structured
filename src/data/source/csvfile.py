@@ -1,12 +1,11 @@
 import pandas as pd
 
-from .filesystem import DataSourceFile
 
 
 
-class DataSourceCSV(DataSourceFile):
+class DataSourceCSV:
     """
-    CSV 데이터를 로드하는 클래스
+    CSV 데이터를 로드하는 클래스로 데이터노드의 덕타이핑
     """
     def __init__(
         self, 

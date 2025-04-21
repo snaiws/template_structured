@@ -20,7 +20,7 @@ class BaseDataset(ABC):
     async def data(self):
         """데이터에 대한 지연 로딩 구현"""
         if self._data is None:
-            self._data = await self.pipeline(**self.params)
+            self._data = await self.get_data(**self.params)
         return self._data
     
     @abstractmethod
@@ -34,7 +34,7 @@ class BaseDataset(ABC):
         pass
     
     @abstractmethod
-    async def pipeline(self):
+    async def get_data(self):
         '''
         데이터노드를 통해 파이프라인 정의
         '''
