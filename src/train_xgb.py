@@ -3,16 +3,16 @@ import asyncio
 
 from sklearn.metrics import f1_score
 
-from configs import ConfigDefineTool
+from configs import Configs
 from data.dataset_loaninfo import DatasetLoaninfoRaw
 from machine import ModelXGB
 
 
 async def train(exp_name):
     # configs
-    config = ConfigDefineTool(exp_name = exp_name)
-    env = config.get_env()
-    exp = config.get_exp()
+    config = Configs(exp_name = exp_name)
+    env = config.env
+    exp = config.exp
 
     path_train = os.path.join(env.PATH_DATA_DIR, exp.train)
 

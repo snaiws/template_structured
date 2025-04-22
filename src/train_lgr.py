@@ -3,7 +3,7 @@ import os
 from sklearn.metrics import f1_score
 from sklearn.linear_model import LogisticRegression
 
-from configs import ConfigDefineTool
+from configs import Configs
 from data.data_loader import load_data
 from data.set import DatasetLGR
 from machine import ModelLGR
@@ -11,9 +11,9 @@ from machine import ModelLGR
 
 def train(exp_name):
     # configs
-    config = ConfigDefineTool(exp_name = exp_name)
-    env = config.get_env()
-    exp = config.get_exp()
+    config = Configs(exp_name = exp_name)
+    env = config.env
+    exp = config.exp
 
     path_train = os.path.join(env.PATH_DATA_DIR, exp.train)
 

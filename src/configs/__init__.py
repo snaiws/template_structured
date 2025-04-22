@@ -1,1 +1,1 @@
-from .config_builder import ConfigDefineTool
+from .config_builder import Configs

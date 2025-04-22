@@ -1,9 +1,10 @@
 from dataclasses import dataclass, field
 
-from .base import Experiment  # 별도 파일에 선언된 dataclass
+from .base import Experiment, register  # 별도 파일에 선언된 dataclass
 
 
 
+@register
 @dataclass    
 class ExperimentLgrBase(Experiment):
     '''

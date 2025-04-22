@@ -4,6 +4,7 @@ from dataclasses import dataclass, asdict, field
 
 @dataclass
 class Experiment:
+    versions = {}
     exp_name: str = field(init=False)
 
     def __post_init__(self):
@@ -11,3 +12,8 @@ class Experiment:
         
     def to_dict(self):
         return asdict(self)
+    
+
+versions = {}
+def register(cls):
+    versions[cls.__name__] = cls
