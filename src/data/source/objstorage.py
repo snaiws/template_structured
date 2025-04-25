@@ -6,17 +6,17 @@ import boto3
 from botocore.client import Config  
 from botocore.exceptions import ClientError  
 
+from .base import Source
 
-
-class OSManager:
-    _instances: ClassVar[Dict[str, 'OSManager']] = {}
+class SourceOS(Source):
+    _instances: ClassVar[Dict[str, 'SourceOS']] = {}
     _lock = asyncio.Lock()
     _executor = ThreadPoolExecutor()
     
     def __new__(cls, endpoint_url, *args, **kwargs):
         # base_url을 키로 사용하여 인스턴스 관리
         if endpoint_url not in cls._instances:
-            cls._instances[endpoint_url] = super(OSManager, cls).__new__(cls)
+            cls._instances[endpoint_url] = super(SourceOS, cls).__new__(cls)
         return cls._instances[endpoint_url]
     
     def __init__(self, endpoint_url, aws_access_key_id, aws_secret_access_key, region_name):  
@@ -82,6 +82,12 @@ class OSManager:
             lambda: self.client.download_file(bucket, object_path, local_path)
         )
         return True
+
+    def __call__(self, *data, mode):
+        if mode == "upload":
+            return self.upload(*data)
+        elif mode == "download":
+            return self.download(*data)
         
 
 if __name__ == "__main__":

@@ -1,7 +1,10 @@
-from abc import ABC, abstractmethod
+import pandas as pd
+
+from .base import Source
 
 
-class Source(ABC):
+
+class SourceCSV(Source):
     '''
     파이프라인 덕타이핑(__call__)
     '''
@@ -9,9 +12,9 @@ class Source(ABC):
         self.params = params
         
     
-    @abstractmethod
     def __call__(self, data):
         '''
         전처리 조합
         '''
-        pass
+        data = pd.read_csv(data, **self.params)
+        return data

@@ -1,20 +1,21 @@
+import os
 from typing import Dict, ClassVar, List, Tuple
 import asyncio
 
-import os
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.ext.asyncio import AsyncEngine
 
+from .base import Source
 
-class DBManager:
-    _instances: ClassVar[Dict[str, 'DBManager']] = {}
+class SourceDB(Source):
+    _instances: ClassVar[Dict[str, 'SourceDB']] = {}
     _lock = asyncio.Lock()
     
     def __new__(cls, host, *args, **kwargs):
         # host를 키로 사용하여 인스턴스 관리
         if host not in cls._instances:
-            cls._instances[host] = super(DBManager, cls).__new__(cls)
+            cls._instances[host] = super(SourceDB, cls).__new__(cls)
         return cls._instances[host]
     
     def __init__(self, db_type: str, user: str, password: str, host: str, port: int, database: str, driver: str = None):
@@ -96,6 +97,12 @@ class DBManager:
         except Exception as e:
             print(f"Error closing database connection: {e}")
 
+
+    def __call__(self, *data, mode):
+        if mode == "getter":
+            return self.getter(*data)
+        elif mode == "setter":
+            return self.setter(*data)
 
 
 

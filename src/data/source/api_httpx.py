@@ -2,11 +2,11 @@ from typing import Dict, Any, Optional
 
 import httpx
 
-from .base import BaseAPIManager
+from .api import SourceAPI
 
 
 
-class HttpxAPIManager(BaseAPIManager):
+class SourceHttpx(SourceAPI):
     """
     비동기 HTTP API 매니저
     """

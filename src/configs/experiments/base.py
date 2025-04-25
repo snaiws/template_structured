@@ -4,7 +4,6 @@ from dataclasses import dataclass, asdict, field
 
 @dataclass
 class Experiment:
-    versions = {}
     exp_name: str = field(init=False)
 
     def __post_init__(self):

@@ -7,7 +7,7 @@ class Pipeline(ABC):
         
     
     @abstractmethod
-    def __call__(self):
+    def __call__(self, data):
         '''
         전처리 조합
         '''
